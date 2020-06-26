@@ -1,7 +1,4 @@
 var express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-const stripe = require('stripe')('sk_test_4UNeAg7ULlqyKdIUjHj0hx8G002Zx3RDDz');
 
 var app = express();
 
