@@ -1,4 +1,5 @@
 var express = require('express');
+const bodyParser = require('body-parser');
 var app = express();
 
 // set the port of our application
