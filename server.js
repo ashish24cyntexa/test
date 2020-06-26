@@ -19,6 +19,14 @@ app.use(express.static(path.join(__dirname, './views')));
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log('Server is running...'));
 
+// set the home page route
+app.get('/', function(req, res) {
+
+	// ejs render automatically looks in the views folder
+	res.render('index');
+	//res.send('<h1>Hello world</h1>');
+});
+
 app.post("/charge", (req, res) => {
   try {
     stripe.customers
