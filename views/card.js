@@ -32,9 +32,7 @@ form.addEventListener('submit', e => {
   stripe.createToken(card).then(res => {
     if (res.error) errorEl.textContent = res.error.message;
     else stripeTokenHandler(res.token);
-  })
-})
-app.post("/charge", (req, res) => {
+    app.post("/charge", (req, res) => {
   try {
     stripe.customers
       .create({
@@ -55,3 +53,6 @@ app.post("/charge", (req, res) => {
     res.send(err);
   }
 });
+  })
+})
+
