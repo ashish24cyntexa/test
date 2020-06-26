@@ -26,10 +26,10 @@ app.listen(port, function() {
 
 app.post("/customers", (req, res) => {
   try {
-        stripe.charges.create({
-          amount: req.body.amount * 100,
-          currency: "usd",
-          customer: customer.id
+        stripe.customers.create({
+          name: "test",
+          email: "test@gmail.com"
+         
         })
       )
       .then(() => res.render("completed.html"))
