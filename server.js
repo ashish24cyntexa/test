@@ -1,23 +1,22 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-const stripe = require('stripe')('sk_test_4UNeAg7ULlqyKdIUjHj0hx8G002Zx3RDDz'); // Add your Secret Key Here
+var express = require('express');
+var bodyParser = require('body-parser');
+var path = require('path');
+var stripe = require('stripe')('sk_test_4UNeAg7ULlqyKdIUjHj0hx8G002Zx3RDDz'); // Add your Secret Key Here
 
-const app = express();
+var app = express();
+
+// set the port of our application
+// process.env.PORT lets the port be set by Heroku
+var port = process.env.PORT || 8080;
+
+// set the view engine to ejs
+app.set('view engine', 'ejs');
 
 // This will make our form data much more useful
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// This will set express to render our views folder, then to render the files as normal html
-app.set('view engine', 'ejs');
-//app.engine('html', require('ejs').renderFile);
-
-app.use(express.static(path.join(__dirname, './views')));
-
-// Future Code Goes Here
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log('Server is running...'));
+// make express look in the public directory for assets (css/js/img)
+app.use(express.static(__dirname + '/public'));
 
 // set the home page route
 app.get('/', function(req, res) {
@@ -47,4 +46,8 @@ app.post("/charge", (req, res) => {
   } catch (err) {
     res.send(err);
   }
+});
+
+app.listen(port, function() {
+	console.log('Our app is running on http://localhost:' + port);
 });
