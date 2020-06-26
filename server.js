@@ -24,15 +24,8 @@ app.listen(port, function() {
 	console.log('Our app is running on http://localhost:' + port);
 });
 
-app.post("/charge", (req, res) => {
+app.post("/customers", (req, res) => {
   try {
-    stripe.customers
-      .create({
-        name: req.body.name,
-        email: req.body.email,
-        source: req.body.stripeToken
-      })
-      .then(customer =>
         stripe.charges.create({
           amount: req.body.amount * 100,
           currency: "usd",
