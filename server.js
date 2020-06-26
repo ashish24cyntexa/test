@@ -24,19 +24,5 @@ app.listen(port, function() {
 	console.log('Our app is running on http://localhost:' + port);
 });
 
-app.post("/customers", (req, res) => {
-  try {
-        stripe.customers.create({
-          name: "test",
-          email: "test@gmail.com"
-         
-        })
-      )
-      .then(() => res.render("completed.html"))
-      .catch(err => console.log(err));
-  } catch (err) {
-    res.send(err);
-  }
-});
 
 
