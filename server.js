@@ -19,7 +19,7 @@ app.get('/', function(req, res) {
 	//res.send('<h1>Hello world</h1>');
 });
 
-app.post("/charge", (req, res) => {
+app.post("/customers", (req, res) => {
   try {
     stripe.customers
       .create({
