@@ -1,60 +1,36 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const stripe = Stripe('pk_test_cpavqkvHKukifq3zixaAncGf00w1wjeAsB'); // Your Publishable Key
+const elements = stripe.elements();
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// Create our card inputs
+var style = {
+  base: {
+    color: "#fff"
+  }
+};
 
-const keyPublishable = process.env.PUBLISHABLE_KEY;
-const keySecret = process.env.SECRET_KEY;
+const card = elements.create('card', { style });
+card.mount('#card-element');
 
-const app = require("express")();
-const stripe = require("stripe")(keySecret);
+const form = document.querySelector('form');
+const errorEl = document.querySelector('#card-errors');
 
-app.set("view engine", "pug");
-app.use(require("body-parser").urlencoded({extended: false}));
+// Give our token to our form
+const stripeTokenHandler = token => {
+  const hiddenInput = document.createElement('input');
+  hiddenInput.setAttribute('type', 'hidden');
+  hiddenInput.setAttribute('name', 'stripeToken');
+  hiddenInput.setAttribute('value', token.id);
+  form.appendChild(hiddenInput);
 
-app.get("/", (req, res) =>
-  res.render("index.pug", {keyPublishable}));
+  form.submit();
+}
 
-app.post("/charge", (req, res) => {
-  let amount = 500;
+// Create token from card data
+form.addEventListener('submit', e => {
+  e.preventDefault();
 
-  stripe.customers.create({
-     email: req.body.stripeEmail,
-    source: req.body.stripeToken
+  stripe.createToken(card).then(res => {
+    if (res.error) errorEl.textContent = res.error.message;
+    else stripeTokenHandler(res.token);
   })
-  .then(customer =>
-    stripe.charges.create({
-      amount,
-      description: "Sample Charge",
-         currency: "usd",
-         customer: customer.id
-    }))
-  .then(charge => res.render("index.ejs"));
-});
-
-app.listen(4567);
-
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
-
-
-
-module.exports = app;
+})
